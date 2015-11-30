@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 31, 2014 2:39:39 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.peafowl.media.web.dao.pojo.UserDeviceInfo" table="user_device_info">
+        <id name="recordId" column="recordid" type="integer">
+            <generator class="native"/>
+        </id>
+        <property name="deviceId" type="string">
+            <column length="255" name="deviceid" />
+        </property>
+        <property name="activationCode" type="java.lang.Integer">
+            <column length="10" name="activationcode"/>
+        </property>
+        <property name="deviceStatus" type="string">
+            <column length="50" name="devicestatus"/>
+        </property>
+        <property name="activatedDate" type="timestamp">
+            <column length="10" name="activateddate"/>
+        </property>
+        <property name="expiryDate" type="timestamp">
+            <column length="10" name="expirydate"/>
+        </property>
+        <property name="created" type="timestamp">
+            <column length="10" name="created"/>
+        </property>
+        <property name="mediaSiloId" type="string">
+            <column length="255" name="mediasilo_id"/>
+        </property>
+        <property name="updated" type="timestamp">
+            <column length="10" name="updated"/>
+        </property>
+    </class>
+</hibernate-mapping>

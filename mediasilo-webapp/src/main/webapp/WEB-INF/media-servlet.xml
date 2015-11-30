@@ -1,0 +1,79 @@
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:context="http://www.springframework.org/schema/context" 
+       xmlns:mvc="http://www.springframework.org/schema/mvc" 
+       xmlns:aop="http://www.springframework.org/schema/aop" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:p="http://www.springframework.org/schema/p" 
+       xsi:schemaLocation=" http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+         
+    <!-- web service package scan -->
+    <import resource="classpath:media-service.xml"/>
+    <context:component-scan base-package="com.peafowl.media.web.service.impl"/>
+    
+    <!-- Web Service annotations scanner-->
+    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+        <property name="useDefaultSuffixPattern" value="false"/>
+    </bean> 
+  
+    <bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="classesToBeBound">
+            <list> 
+                <value>com.peafowl.media.web.tvml.st.STDocument</value>
+                <value>com.peafowl.media.web.tvml.pt.PTDocument</value>
+                <value>com.peafowl.media.web.tvml.lt.FTDocument</value>
+                <value>com.peafowl.media.web.dto.MediaMessage</value>
+            </list>    
+        </property>
+    </bean>   
+    
+    <bean id="xmlConverter" class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter"
+          p:marshaller-ref="marshaller"
+          p:unmarshaller-ref="marshaller"/>
+    
+    <!-- Json Converter-->
+    <bean id="jsonConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"
+          p:supportedMediaTypes="application/json"/>
+    
+    <bean id="restClient" class="org.springframework.web.client.RestTemplate">
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+                <!--
+                 <ref bean="jsonConverter"/>
+                --> 
+            </list>
+        </property>
+    </bean>
+
+    
+    <!-- Configure XML Converter to Annotated web services -->
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                
+                <ref bean="xmlConverter"/>
+                <!--
+                <ref bean="jsonConverter"/>
+                -->
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="methodHandlerExceptionResolver" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver">
+        <property name="messageConverters">
+            <list>
+                <!--
+                <ref bean="jsonConverter"/>
+                -->
+                <ref bean="xmlConverter"/>
+            </list>
+        </property>
+    </bean>
+</beans>
